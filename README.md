@@ -18,8 +18,6 @@ Ever wondered how to migrate your T3 application into a monorepo? Stop right her
 
 It uses [Turborepo](https://turborepo.org/) and contains:
 
-
-
 ```
 .github
   └─ workflows
