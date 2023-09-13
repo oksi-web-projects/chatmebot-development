@@ -1,23 +1,22 @@
 "use client";
 
-import Link from "next/link";
-
 import { api } from "~/utils/api";
-import { Container } from "~/components/Container";
 import { MyBotStatus } from "./MyBotStatus";
 
 export function MyBots() {
   const { data: bots, isLoading } = api.bot.all.useQuery();
 
-  const { data: result, mutateAsync: startBot } = api.bot.start.useMutation({
-    async onSuccess() {},
-  });
-
   if (isLoading) {
     return <>Loading...</>;
   }
 
-  console.log(bots);
+  async function startBot(id: string) {
+    const { mutateAsync, error, isLoading } = api.bot.start.useMutation();
+    await mutateAsync({ id });
+    if (isLoading) {
+      console.log("Loading...");
+    }
+  }
 
   return (
     <>
@@ -53,20 +52,16 @@ export function MyBots() {
               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                 <button
                   className="text-indigo-600 hover:text-indigo-900"
-                  onClick={async () => {
-                    const { id } = bot;
-                    await startBot({ id });
-
-                    if (isLoading) {
-                      console.log("Loading...");
-                    }
-                  }}
+                  onClick={() => startBot(bot.id)}
                 >
                   Run
                 </button>
-                <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                  Edit<span className="sr-only">, {bot.id}</span>
-                </a>
+                <button
+                  className="text-indigo-600 hover:text-indigo-900"
+                  onClick={() => startBot(bot.id)}
+                >
+                  Stop
+                </button>
               </td>
             </tr>
           ))}

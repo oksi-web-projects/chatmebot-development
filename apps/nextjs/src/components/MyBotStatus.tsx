@@ -2,7 +2,7 @@
 
 import { api } from "~/utils/api";
 
-export function MyBotStatus(botId: string) {
+export function MyBotStatus(botId: any) {
   const { data, isLoading } = api.bot.status.useQuery();
 
   if (isLoading) {

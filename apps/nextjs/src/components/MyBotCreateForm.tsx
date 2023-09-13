@@ -1,34 +1,44 @@
 "use client";
 
+import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { Container } from "~/components/Container";
 
 export default function MyBotCreateForm() {
-  const context = api.useContext();
-
   const [token, setToken] = useState("");
+  const { mutateAsync, error, isLoading } = api.bot.create.useMutation();
 
-  const { mutateAsync: createBot, error } = api.bot.create.useMutation({
-    async onSuccess() {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // if (chatName.trim().length < 10) {
+    //   return;
+    // }
+    try {
+      await mutateAsync({ token: token });
+      toast.success("Chatbot created successfully!");
       setToken("");
-      await context.bot.all.invalidate();
-    },
-  });
+      // router.push("/dashboard/my-chats", { scroll: false });
+    } catch (error) {
+      // Show an error toast when there is an error
+      toast.error("An error occurred while creating the chatbot.");
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setToken(e.target.value);
+  };
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
 
   return (
     <>
       <form
         className="flex w-full max-w-2xl flex-col p-4 text-left"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          await createBot({
-            token,
-          });
-          setToken("");
-          await context.bot.all.invalidate();
-        }}
+        onSubmit={handleSubmit}
       >
         <div className="mt-4 border-t border-gray-900/10 pt-4">
           <label
@@ -40,7 +50,7 @@ export default function MyBotCreateForm() {
           <div className="mt-2">
             <input
               value={token}
-              onChange={(e) => setToken(e.target.value)}
+              onChange={handleChange}
               placeholder="token"
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
