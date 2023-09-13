@@ -37,7 +37,7 @@ export default async function DashboardPage() {
               className="flex h-32 items-center justify-center rounded-md border bg-gray-100 px-6 py-3 text-center  font-medium  shadow-sm hover:bg-gray-500"
               href="/dashboard/my-bots"
             >
-              View All Products
+              My Telegram Bots
             </Link>
           </div>
         </div>
