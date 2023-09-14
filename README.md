@@ -135,6 +135,18 @@ _We do not recommend deploying a SQLite database on serverless environments sinc
 
 #### Deploy to Vercel
 
+
+UPDATE(NEW SIMPLE GUIDE)
+
+1. Add New project...
+2. Import Git Repository (select this repo)
+3. Configure Project
+   - add env
+   - Build and Output Settings. Change default build command from "turbo run build" to "turbo run build && turbo db:generate"
+4. Deploy project
+5. Update env (if need) and redeploy project. Maybe need update PAYMENT_CALLBACK and PAYMENT_REDIRECT from new project URL
+6. Update setting from auth provider(if project URL has been change)
+
 Let's deploy the Next.js application to [Vercel](https://vercel.com/). If you have ever deployed a Turborepo app there, the steps are quite straightforward. You can also read the [official Turborepo guide](https://vercel.com/docs/concepts/monorepos/turborepo) on deploying to Vercel.
 
 1. Create a new project on Vercel, select the `apps/nextjs` folder as the root directory and apply the following build settings:
