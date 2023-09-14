@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { api } from "~/utils/api";
 import authGuard from "~/components/authGuard";
