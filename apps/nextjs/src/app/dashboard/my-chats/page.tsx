@@ -6,7 +6,8 @@ import { auth } from "@chatmebot/auth";
 import { Container } from "~/components/Container";
 import { MyChats } from "~/components/MyChats";
 
-export default async function ChatPage() {
+export default async function ChatPage(props: any) {
+  console.log(props, "props");
   const session = await auth();
   if (!session?.user) {
     return redirect("/login");

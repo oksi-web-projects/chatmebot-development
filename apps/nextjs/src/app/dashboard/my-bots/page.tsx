@@ -1,16 +1,15 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import { auth } from "@chatmebot/auth";
-
+import { api } from "~/utils/api";
+import authGuard from "~/components/authGuard";
 import { Container } from "~/components/Container";
 import { MyBots } from "~/components/MyBots";
 
 export default async function BotPage() {
-  const session = await auth();
-  if (!session?.user) {
-    return redirect("/login");
-  }
+  await authGuard({
+    session: "true",
+  });
 
   return (
     <>
