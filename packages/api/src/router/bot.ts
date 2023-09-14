@@ -2,9 +2,10 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
+const TELEGRAM_BOT_SERVISE_API_URL = process.env.TELEGRAM_BOT_SERVISE_API_URL;
+
 export const botRouter = createTRPCRouter({
   all: protectedProcedure.query(({ ctx: { prisma, session } }) => {
-    console.log(session.user.id);
     return prisma.telegramBot.findMany({
       where: {
         userId: session.user.id,
@@ -39,7 +40,7 @@ export const botRouter = createTRPCRouter({
     .input(z.object({ id: z.string().min(1) }))
     .mutation(async ({ input, ctx }) => {
       const response = await fetch(
-        "https://tg-bot-615b.onrender.com/telegram/set-webhook",
+        `${TELEGRAM_BOT_SERVISE_API_URL}/telegram/set-webhook`,
         {
           method: "POST", // *GET, POST, PUT, DELETE, etc.
           mode: "cors", // no-cors, *cors, same-origin
@@ -65,12 +66,62 @@ export const botRouter = createTRPCRouter({
       return false;
     }),
 
-  stop: protectedProcedure.mutation(({ ctx }) => {
-    return true;
-  }),
-  status: protectedProcedure.query(({ ctx }) => {
-    return true;
-  }),
+  stop: protectedProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(async ({ input, ctx }) => {
+      const response = await fetch(
+        `${TELEGRAM_BOT_SERVISE_API_URL}/telegram/delete-webhook`,
+        {
+          method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.AUTH_API_KEY || "",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify({
+            telegramBotId: input.id,
+          }), // body data type must match "Content-Type" header
+        },
+      );
+
+      if (response.ok) {
+        return true;
+      }
+
+      return false;
+    }),
+  status: protectedProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const response = await fetch(
+        `${TELEGRAM_BOT_SERVISE_API_URL}/telegram/status/${input.id}`,
+        {
+          method: "GET", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          // credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            // "Content-Type": "application/json",
+            "x-api-key": process.env.AUTH_API_KEY || "",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          // redirect: "follow", // manual, *follow, error
+          // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        },
+      );
+
+      const data = (await response.json()) as { status: boolean };
+
+      if (response.ok && data.status) {
+        return true;
+      }
+      return false;
+    }),
 
   // delete: publicProcedure.input(z.string()).mutation(({ ctx, input }) => {
   //   return ctx.prisma.chat.delete({ where: { id: input } });
