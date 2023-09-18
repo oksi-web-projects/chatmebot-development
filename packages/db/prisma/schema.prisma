@@ -115,7 +115,10 @@ model TelegramBot {
     User           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
     createdAt      DateTime         @default(now())
     updatedAt      DateTime         @updatedAt
+    expires        DateTime?
     TelegramBotLog TelegramBotLog[]
+
+    @@index([expires])
 }
 
 model TelegramBotLog {

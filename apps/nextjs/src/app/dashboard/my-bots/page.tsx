@@ -1,15 +1,11 @@
 import Link from "next/link";
 
-import { api } from "~/utils/api";
 import authGuard from "~/components/authGuard";
 import { Container } from "~/components/Container";
 import { MyBots } from "~/components/MyBots";
 
 export default async function BotPage() {
-  await authGuard({
-    session: "true",
-  });
-
+  await authGuard();
   return (
     <>
       <Container className="pb-32 pt-8 text-center">

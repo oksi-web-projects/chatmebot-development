@@ -6,7 +6,7 @@ interface configInterface {
   session?: string;
 }
 
-export default async (config: configInterface = { session: "" }) => {
+export default async () => {
   const session = await auth();
   if (!session?.user) {
     return redirect("/login");

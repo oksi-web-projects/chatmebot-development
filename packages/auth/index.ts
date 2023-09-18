@@ -1,4 +1,6 @@
 // import Discord from "@auth/core/providers/discord";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import GoogleProvider from "@auth/core/providers/google";
 import type { DefaultSession } from "@auth/core/types";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -56,6 +58,19 @@ export const {
           id: user.id,
         },
       };
+    },
+    // signIn: async () => {
+    //   // redirect("/dashboard");
+    //   // const cookieStore = cookies();
+    //   // const url = cookieStore.get("prevUrl");
+    //   // if (url) {
+    //   //   return redirect(url.value);
+    //   // }
+    //   return true;
+    // },
+    redirect: async ({ url, baseUrl }) => {
+      console.log("### url, baseUrl \n", url.startsWith(baseUrl), url, baseUrl);
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
     // @TODO - if you wanna have auth on the edge
     // jwt: ({ token, profile }) => {
