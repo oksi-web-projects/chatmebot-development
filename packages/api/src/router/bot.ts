@@ -150,14 +150,14 @@ export const botRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.string())
     .mutation(async ({ input, ctx }) => {
-      const isBotExist = await ctx.prisma.telegramBot.findUnique({
+      const telegramBot = await ctx.prisma.telegramBot.findUnique({
         where: {
           id: input,
           userId: ctx.session.user.id,
         },
       });
 
-      if (!isBotExist) {
+      if (!telegramBot) {
         const error = new ZodError([
           {
             code: ZodIssueCode.invalid_date,
@@ -171,6 +171,25 @@ export const botRouter = createTRPCRouter({
           cause: error,
         });
       }
+
+      // delete webhook
+
+      await fetch(`${TELEGRAM_BOT_SERVISE_API_URL}/telegram/delete-webhook`, {
+        method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.AUTH_API_KEY || "",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify({
+          telegramBotId: telegramBot.id,
+        }), // body data type must match "Content-Type" header
+      });
 
       return ctx.prisma.telegramBot.delete({
         where: {
