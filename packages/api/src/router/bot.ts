@@ -1,4 +1,5 @@
 import { initTRPC, TRPCError } from "@trpc/server";
+import { createTextChangeRange } from "typescript";
 import { z, ZodError, ZodIssueCode } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -32,6 +33,7 @@ export const botRouter = createTRPCRouter({
       const isBotExist = await ctx.prisma.telegramBot.findUnique({
         where: {
           token: input.token,
+          userId: ctx.session.user.id,
         },
       });
 
@@ -145,7 +147,36 @@ export const botRouter = createTRPCRouter({
       return false;
     }),
 
-  // delete: publicProcedure.input(z.string()).mutation(({ ctx, input }) => {
-  //   return ctx.prisma.chat.delete({ where: { id: input } });
-  // }),
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input, ctx }) => {
+      const isBotExist = await ctx.prisma.telegramBot.findUnique({
+        where: {
+          id: input,
+          userId: ctx.session.user.id,
+        },
+      });
+
+      if (!isBotExist) {
+        const error = new ZodError([
+          {
+            code: ZodIssueCode.invalid_date,
+            path: ["id"],
+            message: "Bot not found",
+          },
+        ]);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Bot not found",
+          cause: error,
+        });
+      }
+
+      return ctx.prisma.telegramBot.delete({
+        where: {
+          id: input,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
 });

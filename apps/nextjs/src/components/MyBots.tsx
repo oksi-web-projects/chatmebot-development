@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 
 import { api } from "~/utils/api";
@@ -30,6 +31,10 @@ export function MyBots() {
             >
               Status
             </th>
+            <th
+              scope="col"
+              className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900"
+            ></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -41,6 +46,14 @@ export function MyBots() {
                 </td>
                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                   <MyBotStatus botId={bot.id} />
+                </td>
+                <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                  <Link
+                    href={`/dashboard/my-bots/${bot.id}/view`}
+                    className="text-indigo-600 hover:text-indigo-900"
+                  >
+                    View<span className="sr-only">, {bot.id}</span>
+                  </Link>
                 </td>
               </tr>
             );

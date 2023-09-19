@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import { prisma } from "@chatmebot/db";
 
 import { Chat } from "~/components/Chat";
@@ -13,7 +15,7 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
   });
 
   if (!chat) {
-    return notFound();
+    notFound();
   }
 
   return (
