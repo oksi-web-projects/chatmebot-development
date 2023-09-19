@@ -12,7 +12,7 @@ export const botRouter = createTRPCRouter({
       where: {
         userId: session.user.id,
       },
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "desc" },
     });
   }),
   byId: protectedProcedure
@@ -30,14 +30,14 @@ export const botRouter = createTRPCRouter({
     .mutation(async (opts) => {
       const { input, ctx } = opts;
 
-      const isBotExist = await ctx.prisma.telegramBot.findUnique({
+      const telegramBot = await ctx.prisma.telegramBot.findUnique({
         where: {
           token: input.token,
           userId: ctx.session.user.id,
         },
       });
 
-      if (isBotExist) {
+      if (telegramBot) {
         const error = new ZodError([
           {
             code: ZodIssueCode.invalid_date,
@@ -48,6 +48,28 @@ export const botRouter = createTRPCRouter({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Bot already exist",
+          cause: error,
+        });
+      }
+
+      const me = await fetch(
+        `https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe`,
+        {
+          method: "GET",
+        },
+      );
+
+      if (!me.ok) {
+        const error = new ZodError([
+          {
+            code: ZodIssueCode.invalid_date,
+            path: ["token"],
+            message: "Bot token does not exist",
+          },
+        ]);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Bot token does not exist",
           cause: error,
         });
       }
