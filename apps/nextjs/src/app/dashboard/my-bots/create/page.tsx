@@ -1,6 +1,9 @@
 import { notFound, redirect } from "next/navigation";
+import { ToastContainer } from "react-toastify";
 
 import { auth } from "@chatmebot/auth";
+
+import "react-toastify/dist/ReactToastify.css";
 
 import { api } from "~/utils/api";
 import { Container } from "~/components/Container";
@@ -15,6 +18,7 @@ export default async function BotCreatePage() {
   return (
     <>
       <Container className="pb-32 pt-8 text-center">
+        <ToastContainer className="mx-auto max-w-2xl" position="top-center" />
         <div className="mx-auto max-w-2xl">
           <div className="space-y-12 sm:space-y-16">
             <div>

@@ -1,4 +1,5 @@
-import { z } from "zod";
+import { initTRPC, TRPCError } from "@trpc/server";
+import { z, ZodError, ZodIssueCode } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -27,6 +28,27 @@ export const botRouter = createTRPCRouter({
     .input(z.object({ token: z.string().min(1) }))
     .mutation(async (opts) => {
       const { input, ctx } = opts;
+
+      const isBotExist = await ctx.prisma.telegramBot.findUnique({
+        where: {
+          token: input.token,
+        },
+      });
+
+      if (isBotExist) {
+        const error = new ZodError([
+          {
+            code: ZodIssueCode.invalid_date,
+            path: ["token"],
+            message: "Bot already exist",
+          },
+        ]);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Bot already exist",
+          cause: error,
+        });
+      }
 
       return ctx.prisma.telegramBot.create({
         data: {

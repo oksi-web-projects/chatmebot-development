@@ -2,6 +2,7 @@
 
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
+import Router from "next/router";
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
@@ -19,7 +20,7 @@ export default function MyBotCreateForm() {
       await mutateAsync({ token: token });
       toast.success("Chatbot created successfully!");
       setToken("");
-      // router.push("/dashboard/my-chats", { scroll: false });
+      window.location.href = "/dashboard/my-bots";
     } catch (error) {
       // Show an error toast when there is an error
       toast.error("An error occurred while creating the chatbot.");
