@@ -43,7 +43,12 @@ export function MyChats() {
                 {chat.name}
               </td>
               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-0">
-                <Link href={`/chat/${chat.id}`}>{chat.id}</Link>
+                <Link
+                  className="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  href={`/chat/${chat.id}`}
+                >
+                  open chat
+                </Link>
               </td>
               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                 <a href="#" className="text-indigo-600 hover:text-indigo-900">
