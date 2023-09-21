@@ -55,7 +55,6 @@ model User {
     password      String?
     accounts      Account[]
     sessions      Session[]
-    Order         Order[]
     TelegramBot   TelegramBot[]
     Chat          Chat[]
 }
@@ -69,35 +68,24 @@ model VerificationToken {
 }
 
 model Product {
-    id    String  @id @default(uuid())
-    name  String
-    price Float
-    Order Order[]
-}
-
-model Order {
-    id           String    @id @default(uuid())
-    productId    String
-    userId       String
-    user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    price        Float
-    product      Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-    Invoice      Invoice[]
-    status       String    @default("CREATED")
-    createdDate  DateTime  @default(now())
-    modifiedDate DateTime  @default(now())
+    id      String    @id @default(uuid())
+    name    String
+    params  Json?
+    price   Float
+    Invoice Invoice[]
 }
 
 model Invoice {
     id            String          @id @default(uuid())
     pageUrl       String
-    orderId       String
-    order         Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
     ammount       Int
     status        String          @default("CREATED")
     createdDate   DateTime        @default(now())
     modifiedDate  DateTime        @default(now())
     InvoiceStatus InvoiceStatus[]
+    InvoiceToChat InvoiceToChat[]
+    Product       Product?        @relation(fields: [productId], references: [id])
+    productId     String?
 }
 
 model InvoiceStatus {
@@ -132,14 +120,18 @@ model TelegramBotLog {
 }
 
 model Chat {
-    id         String       @id @default(uuid())
-    name       String       @default("")
-    token      String       @default("")
-    userId     String
-    createdAt  DateTime     @default(now())
-    updatedAt  DateTime     @updatedAt
-    User       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-    ChatDialog ChatDialog[]
+    id            String          @id @default(uuid())
+    name          String          @default("")
+    token         String          @default("")
+    userId        String
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+    User          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    expires       DateTime?
+    ChatDialog    ChatDialog[]
+    InvoiceToChat InvoiceToChat[]
+
+    @@index([expires])
 }
 
 model ChatDialog {
@@ -162,4 +154,13 @@ model ChatDialogMessage {
 
     @@index([type])
     @@index([createdAt])
+}
+
+model InvoiceToChat {
+    invoiceId String
+    invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+    chatId    String
+    chat      Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+    @@id([invoiceId, chatId])
 }
