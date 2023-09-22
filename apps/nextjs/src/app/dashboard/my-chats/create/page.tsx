@@ -3,6 +3,8 @@ import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
+import Link from "next/link";
+
 import { auth } from "@chatmebot/auth";
 
 import { api } from "~/utils/api";
@@ -20,7 +22,15 @@ export default async function ChatPage() {
       <Container className="pb-32 pt-8 text-center">
         <ToastContainer className="mx-auto max-w-2xl" position="top-center" />
         <div className="mx-auto max-w-2xl">
-          <div className="space-y-12 sm:space-y-16">
+          <div className="text-left">
+            <Link
+              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              href="/dashboard/my-chats"
+            >
+              Back
+            </Link>
+          </div>
+          <div className="mt-8 space-y-12 sm:space-y-16">
             <div>
               <h1 className="text-lg font-semibold leading-7 text-gray-900">
                 Create chat

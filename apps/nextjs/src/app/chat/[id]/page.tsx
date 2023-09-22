@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import { prisma } from "@chatmebot/db";
 
 import { Chat } from "~/components/Chat";
@@ -13,7 +15,7 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
   });
 
   if (!chat) {
-    return notFound();
+    notFound();
   }
 
   return (
@@ -29,7 +31,17 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
             fugiat aliqua.
           </p>
           <div className="mt-6">
-            <Chat chatId={id} />
+            {chat.expires === null || chat?.expires > new Date() ? (
+              <Chat chatId={id} />
+            ) : (
+              <>
+                <div>
+                  <h1 className="text-lg font-semibold leading-7 text-gray-900">
+                    Chat expired
+                  </h1>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </Container>

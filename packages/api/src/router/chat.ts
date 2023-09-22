@@ -9,7 +9,7 @@ export const chatRouter = createTRPCRouter({
       where: {
         userId: session.user.id,
       },
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "asc" },
     });
   }),
   byId: protectedProcedure
@@ -26,10 +26,18 @@ export const chatRouter = createTRPCRouter({
     .input(z.object({ name: z.string().min(10) }))
     .mutation(async (opts) => {
       const { input, ctx } = opts;
+      const freeChats = await ctx.prisma.chat.count({
+        where: {
+          userId: ctx.session.user.id,
+          expires: null,
+        },
+      });
+
       return ctx.prisma.chat.create({
         data: {
           name: input.name,
           userId: ctx.session.user.id,
+          expires: freeChats < 1 ? null : new Date(),
         },
       });
     }),

@@ -34,9 +34,11 @@ async function AuthShowcase() {
         </div>
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
           <div>
+            
             <SignIn
               provider="google"
               className="rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              
             >
               Sign in with Google
             </SignIn>

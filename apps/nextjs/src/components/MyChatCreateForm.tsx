@@ -1,6 +1,7 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -15,14 +16,15 @@ export default function MyChatCreateForm() {
   console.log(error, "error test");
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (chatName.trim().length < 10) {
-    //   return;
-    // }
     try {
-      await mutateAsync({ name: chatName });
+      const result = await mutateAsync({ name: chatName });
       toast.success("Chatbot created successfully!");
       setChatName("");
-      // router.push("/dashboard/my-chats", { scroll: false });
+      if (result.expires == null) {
+        window.location.href = `/dashboard/my-chats`;
+      } else {
+        window.location.href = `/dashboard/my-chats/${result.id}/payment`;
+      }
     } catch (error) {
       // Show an error toast when there is an error
       toast.error("An error occurred while creating the chatbot.");
