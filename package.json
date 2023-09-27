@@ -19,6 +19,8 @@
     "type-check": "turbo type-check"
   },
   "dependencies": {
+    "@bugsnag/js": "^7.21.0",
+    "@bugsnag/plugin-react": "^7.19.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
     "@manypkg/cli": "^0.21.0",
     "prettier": "^3.0.0",
