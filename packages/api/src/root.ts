@@ -1,6 +1,7 @@
 import { authRouter } from "./router/auth";
 import { botRouter } from "./router/bot";
 import { chatRouter } from "./router/chat";
+import { instagramRouter } from "./router/instagram";
 import { myOrderRouter } from "./router/myOrder";
 import { paymentRouter } from "./router/payment";
 import { postRouter } from "./router/post";
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   user: userRouter,
   payment: paymentRouter,
   myOrder: myOrderRouter,
+  instagram: instagramRouter,
 });
 
 // export type definition of API

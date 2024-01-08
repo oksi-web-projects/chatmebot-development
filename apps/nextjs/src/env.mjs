@@ -16,6 +16,8 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_WS_URL: z.string(),
     NEXT_PUBLIC_CHAT_UPLOAD_IMAGE_URL: z.string(),
+    NEXT_PUBLIC_IG_APP_CLIENT_ID: z.string(),
+    NEXT_PUBLIC_IG_APP_CALLBACK_URL: z.string().url(),
   },
   /**
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
@@ -23,8 +25,9 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
-    NEXT_PUBLIC_CHAT_UPLOAD_IMAGE_URL:
-      process.env.NEXT_PUBLIC_CHAT_UPLOAD_IMAGE_URL,
+    NEXT_PUBLIC_CHAT_UPLOAD_IMAGE_URL: process.env.NEXT_PUBLIC_CHAT_UPLOAD_IMAGE_URL,
+    NEXT_PUBLIC_IG_APP_CLIENT_ID: process.env.NEXT_PUBLIC_IG_APP_CLIENT_ID,
+    NEXT_PUBLIC_IG_APP_CALLBACK_URL: process.env.NEXT_PUBLIC_IG_APP_CALLBACK_URL,
   },
   skipValidation: !!process.env.CI || !!process.env.SKIP_ENV_VALIDATION,
 });

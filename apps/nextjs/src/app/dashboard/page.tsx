@@ -39,6 +39,12 @@ export default async function DashboardPage() {
             >
               My Telegram Bots
             </Link>
+            <Link
+              className="flex h-32 items-center justify-center rounded-md border bg-gray-100 px-6 py-3 text-center  font-medium  shadow-sm hover:bg-gray-500"
+              href="/dashboard/my-portfolio"
+            >
+              My Portfolio
+            </Link>
           </div>
         </div>
       </Container>
